@@ -1017,10 +1017,7 @@ export default class SearchHeader extends Component {
                                         <Text
                                             ellipsizeMode = 'tail'
                                             multiline
-                                            style = {{ ...adjustedStyle.suggestionEntry,
-                                              flex: 1,
-                                              minHeight: 50
-                                             }}
+                                            style={adjustedStyle.suggestionEntry}
                                         >{ entry.value }</Text>
                                         <View style = {{
                                             flexDirection: `row`,
