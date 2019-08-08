@@ -111,7 +111,6 @@ const DEFAULT_SEARCH_HEADER_VIEW_STYLE = {
         marginVertical: 6,
         width: DEVICE_WIDTH,
         height: 0,
-        macHeight: DEVICE_HEIGHT,
         transform: [{
             translateY: DEVICE_HEIGHT
         }],
@@ -752,9 +751,7 @@ export default class SearchHeader extends Component {
     }
     componentDidUpdate () {
         const component = this;
-        const {
-            enableSuggestion
-        } = component.props;
+        const {enableSuggestion, style} = component.props
         const {
             visible,
             input,
@@ -772,19 +769,37 @@ export default class SearchHeader extends Component {
             }
             if (enableSuggestion) {
                 const animatedSuggestionView = component.refCache[`animated-suggestion-view`];
+                const maxHeight =
+                  (style && style.suggestion && style.suggestion.maxHeight) ||
+                  (style && style.suggestion && style.suggestion.height) ||
+                  DEVICE_HEIGHT
+
+                const minHeight =
+                  (style && style.suggestion && style.suggestion.minHeight) ||
+                  (style && style.suggestion && style.suggestion.height) ||
+                  0
+
                 if (animatedSuggestionView !== undefined) {
                     if (suggestion.visible) {
-                        animatedSuggestionView.transitionTo({
+                        animatedSuggestionView.transitionTo(
+                          {
                             opacity: 1,
                             translateY: 0,
-                            height: DEVICE_HEIGHT
-                        }, DEFAULT_ANIMATION_DURATION_MS, `ease-in-cubic`);
+                            height: maxHeight,
+                          },
+                          DEFAULT_ANIMATION_DURATION_MS,
+                          `ease-in-cubic`
+                        )
                     } else {
-                        animatedSuggestionView.transitionTo({
+                        animatedSuggestionView.transitionTo(
+                          {
                             opacity: 0,
                             translateY: DEVICE_HEIGHT,
-                            height: 0
-                        }, DEFAULT_ANIMATION_DURATION_MS, `ease-out-cubic`);
+                            height: minHeight,
+                          },
+                          DEFAULT_ANIMATION_DURATION_MS,
+                          `ease-out-cubic`
+                        )
                     }
                 }
             }
@@ -919,7 +934,6 @@ export default class SearchHeader extends Component {
                         component.refCache[`animated-suggestion-view`] = componentRef;
                     }}
                     duration = { 300 }
-                    pointerEvents = 'box-none'
                     useNativeDriver = { false }
                     style = { adjustedStyle.suggestion }
                 >
